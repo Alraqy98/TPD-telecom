@@ -400,44 +400,7 @@ const SlideConcept = ({ step }: { step: number }) => {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className="flex-1 min-w-0 p-6 lg:p-10 bg-white rounded-2xl lg:rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 flex flex-col items-center text-center gap-4 lg:gap-5 relative overflow-hidden group"
-        >
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-blue to-brand-orange opacity-80" />
-          <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-brand-blue/10 flex items-center justify-center text-brand-blue group-hover:scale-110 transition-transform">
-            <Clock size={32} className="lg:w-9 lg:h-9" strokeWidth={2.25} />
-          </div>
-          <h3 className="text-3xl lg:text-5xl font-black text-brand-blue italic leading-none">{c.minutePhase.primaryAr}</h3>
-          <p className="text-xs lg:text-sm font-black font-mono text-slate-500 uppercase tracking-widest">{c.minutePhase.primaryEn}</p>
-          <p className="text-lg lg:text-2xl font-black text-brand-blue leading-snug rtl text-right w-full">{c.minutePhase.secondaryAr}</p>
-          <p className="text-[10px] lg:text-xs font-black font-mono text-brand-orange uppercase tracking-wide italic">{c.minutePhase.secondaryEn}</p>
-        </motion.div>
-
-        <div className="flex lg:flex-col items-center justify-center shrink-0 py-1 lg:py-0">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className="hidden lg:flex w-14 h-14 rounded-full bg-brand-orange/10 border-2 border-brand-orange/30 items-center justify-center text-brand-orange"
-            aria-hidden
-          >
-            <ArrowRight size={28} strokeWidth={2.5} />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className="lg:hidden flex w-12 h-12 rounded-full bg-brand-orange/10 border-2 border-brand-orange/30 items-center justify-center text-brand-orange rotate-90"
-            aria-hidden
-          >
-            <ArrowRight size={24} strokeWidth={2.5} />
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-          className="flex-1 min-w-0 p-6 lg:p-10 bg-white rounded-2xl lg:rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 flex flex-col items-center text-center gap-4 lg:gap-5 relative overflow-hidden group"
+          className="order-3 lg:order-1 flex-1 min-w-0 p-6 lg:p-10 bg-white rounded-2xl lg:rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 flex flex-col items-center text-center gap-4 lg:gap-5 relative overflow-hidden group"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-orange to-brand-blue opacity-80" />
           <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-brand-orange/10 flex items-center justify-center text-brand-orange group-hover:scale-110 transition-transform">
@@ -447,6 +410,43 @@ const SlideConcept = ({ step }: { step: number }) => {
           <p className="text-xs lg:text-sm font-black font-mono text-slate-500 uppercase tracking-widest">{c.dayPhase.primaryEn}</p>
           <p className="text-lg lg:text-2xl font-black text-brand-blue leading-snug rtl text-right w-full">{c.dayPhase.secondaryAr}</p>
           <p className="text-[10px] lg:text-xs font-black font-mono text-brand-orange uppercase tracking-wide italic">{c.dayPhase.secondaryEn}</p>
+        </motion.div>
+
+        <div className="order-2 lg:order-2 flex lg:flex-col items-center justify-center shrink-0 py-1 lg:py-0">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
+            className="hidden lg:flex w-14 h-14 rounded-full bg-brand-orange/10 border-2 border-brand-orange/30 items-center justify-center text-brand-orange"
+            aria-hidden
+          >
+            <ArrowLeft size={28} strokeWidth={2.5} />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5 }}
+            className="lg:hidden flex w-12 h-12 rounded-full bg-brand-orange/10 border-2 border-brand-orange/30 items-center justify-center text-brand-orange"
+            aria-hidden
+          >
+            <ArrowRight size={24} strokeWidth={2.5} className="rotate-90" />
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          className="order-1 lg:order-3 flex-1 min-w-0 p-6 lg:p-10 bg-white rounded-2xl lg:rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/40 flex flex-col items-center text-center gap-4 lg:gap-5 relative overflow-hidden group"
+        >
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-blue to-brand-orange opacity-80" />
+          <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl bg-brand-blue/10 flex items-center justify-center text-brand-blue group-hover:scale-110 transition-transform">
+            <Clock size={32} className="lg:w-9 lg:h-9" strokeWidth={2.25} />
+          </div>
+          <h3 className="text-3xl lg:text-5xl font-black text-brand-blue italic leading-none">{c.minutePhase.primaryAr}</h3>
+          <p className="text-xs lg:text-sm font-black font-mono text-slate-500 uppercase tracking-widest">{c.minutePhase.primaryEn}</p>
+          <p className="text-lg lg:text-2xl font-black text-brand-blue leading-snug rtl text-right w-full">{c.minutePhase.secondaryAr}</p>
+          <p className="text-[10px] lg:text-xs font-black font-mono text-brand-orange uppercase tracking-wide italic">{c.minutePhase.secondaryEn}</p>
         </motion.div>
       </div>
     </div>
