@@ -865,7 +865,7 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
             className="pt-2"
           >
             <a 
-              href="https://rai-assessment.vercel.app/" 
+              href="https://tpd-assessment.vercel.app/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="p-4 lg:p-6 bg-brand-blue hover:bg-brand-orange text-white font-black italic text-center rounded-[2rem] shadow-xl transition-all flex items-center justify-center gap-4 group border-3 border-white/20 hover:scale-105 active:scale-95"
