@@ -282,15 +282,24 @@ function renderSlide(index: number, step: number) {
 /* ---------------- Slide Components ---------------- */
 
 const SlideIntroLogo = ({ step }: { step: number }) => (
-  <div className="presentation-slide flex items-center justify-center">
-    <motion.img
+  <div className="presentation-slide flex items-center justify-center p-6">
+    <motion.div
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      src="/intro-logo.png"
-      alt="Talent Preparation Development logo"
-      className="max-h-[86vh] max-w-[92vw] object-contain rounded-2xl lg:rounded-[2.5rem] drop-shadow-sm"
-    />
+      className="flex items-center justify-center w-full max-w-5xl"
+    >
+      <img
+        src="/logo.png"
+        alt="Talent Preparation Development logo"
+        className="max-h-[78vh] max-w-[min(92vw,56rem)] w-auto h-auto object-contain drop-shadow-sm"
+        onError={(e) => {
+          const t = e.target as HTMLImageElement;
+          t.onerror = null;
+          t.src = '/intro-logo.png';
+        }}
+      />
+    </motion.div>
   </div>
 );
 
@@ -1331,12 +1340,16 @@ const SlideThanks = ({ step }: { step: number }) => {
       </div>
 
       <div className="flex flex-col items-center justify-center gap-12 lg:gap-20 w-full max-w-7xl">
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-20">
+        {/* dir="ltr" keeps physical left = start of row so the primary logo stays on the left */}
+        <div
+          dir="ltr"
+          className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-20 w-full"
+        >
           <motion.div 
-            initial={isPdfExport ? pdfMotion.initial : { opacity: 0, x: 50 }}
+            initial={isPdfExport ? pdfMotion.initial : { opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={isPdfExport ? pdfMotion.transition : { delay: 0.6 }}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center shrink-0"
           >
             <div className="w-40 h-40 lg:w-72 lg:h-72 bg-white rounded-[2.5rem] lg:rounded-[4rem] shadow-2xl border border-slate-100 flex items-center justify-center overflow-hidden p-6 lg:p-12 hover:scale-105 transition-transform group">
               <img 
@@ -1356,7 +1369,7 @@ const SlideThanks = ({ step }: { step: number }) => {
             initial={isPdfExport ? pdfMotion.initial : { opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={isPdfExport ? pdfMotion.transition : { delay: 1 }}
-            className="flex flex-col items-center px-8"
+            className="flex flex-col items-center px-8 rtl"
           >
             <div className={`h-0.5 w-12 bg-brand-orange/40 mb-4 ${isPdfExport ? 'block' : 'hidden lg:block'}`}></div>
             <span
@@ -1370,10 +1383,10 @@ const SlideThanks = ({ step }: { step: number }) => {
           </motion.div>
 
           <motion.div 
-            initial={isPdfExport ? pdfMotion.initial : { opacity: 0, x: -50 }}
+            initial={isPdfExport ? pdfMotion.initial : { opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={isPdfExport ? pdfMotion.transition : { delay: 0.8 }}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center shrink-0"
           >
             <div className="w-40 h-40 lg:w-72 lg:h-72 bg-white rounded-[2.5rem] lg:rounded-[4rem] shadow-2xl border border-slate-100 flex items-center justify-center overflow-hidden p-4 lg:p-6 hover:scale-105 transition-transform group">
               <img 
