@@ -12,6 +12,22 @@ export const CONTENT = {
     role: "مستشار الحوكمة التشغيلية و نمو الاعمال",
     subrole: "Operational Governance and Business Growth Consultant"
   },
+  slideConcept: {
+    titleAr: "فكرة البرنامج نقطة تحوّل 90×90",
+    titleEn: "The Concept",
+    minutePhase: {
+      primaryAr: "٩٠ دقيقة",
+      primaryEn: "90 Minutes",
+      secondaryAr: "نشخص و نحدد الفجوة",
+      secondaryEn: "Diagnose the Gap"
+    },
+    dayPhase: {
+      primaryAr: "٩٠ يوماً",
+      primaryEn: "90 Days",
+      secondaryAr: "نفعلها إلى نتائج",
+      secondaryEn: "Activate Results"
+    }
+  },
   slide2: {
     title: "نمط كثير من الشركات العائلية اليوم",
     intro: "كثير من الشركات العائلية:",
