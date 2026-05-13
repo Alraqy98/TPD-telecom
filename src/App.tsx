@@ -194,12 +194,12 @@ export default function App() {
             <div className="w-24 h-24 lg:w-40 lg:h-40 bg-white rounded-2xl lg:rounded-[3rem] shadow-2xl border border-slate-100 flex items-center justify-center overflow-hidden p-2 lg:p-4">
                <img 
                 src="/logo.png" 
-                alt="RAI Logo" 
+                alt="Talent Preparation Development logo" 
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.onerror = null;
-                  target.src = 'https://ui-avatars.com/api/?name=R&background=344a92&color=fff';
+                  target.src = 'https://ui-avatars.com/api/?name=TPD&background=344a92&color=fff';
                 }}
               />
             </div>
@@ -288,7 +288,7 @@ const SlideIntroLogo = ({ step }: { step: number }) => (
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
       src="/intro-logo.png"
-      alt="90x90 Logo"
+      alt="Talent Preparation Development logo"
       className="max-h-[86vh] max-w-[92vw] object-contain rounded-2xl lg:rounded-[2.5rem] drop-shadow-sm"
     />
   </div>
@@ -741,28 +741,14 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
          </div>
       </div>
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
-      <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
-        {CONTENT.slide5.tracks.map((track, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={step >= 1 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-            transition={{ delay: i * 0.1 }}
-            className="p-4 lg:p-6 rounded-[1.5rem] lg:rounded-[2rem] bg-white border border-slate-100 shadow-md group hover:border-brand-blue/40 transition-all relative overflow-hidden flex flex-col hover:-translate-y-1"
-          >
-             <div className="absolute right-0 top-0 w-1 lg:w-1.5 h-full bg-slate-100 group-hover:bg-brand-blue transition-all"></div>
-             <h4 className="text-base lg:text-lg font-black text-brand-blue mb-1 lg:mb-2 italic leading-tight">{track.name}</h4>
-             <p className="text-xs lg:text-sm text-slate-500 font-medium italic leading-relaxed">{track.desc}</p>
-          </motion.div>
-        ))}
-      </div>
+      {/* DOM first: in RTL this column sits on the right — assessment items + CTA */}
       <div className="lg:col-span-4 space-y-2 lg:space-y-3">
         {CONTENT.slide5.items.map((item, i) => (
           <motion.div 
             key={i}
-            initial={{ opacity: 0, x: -20 }}
-            animate={step >= 2 ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-            transition={{ delay: 0.5 + i * 0.1 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={step >= 1 ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+            transition={{ delay: i * 0.1 }}
             className="p-3 lg:p-4 bg-white border border-slate-100 rounded-xl lg:rounded-2xl flex items-center justify-between group hover:border-brand-orange hover:shadow-lg transition-all"
           >
              <div className="flex flex-col text-right">
@@ -776,6 +762,7 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
             className="pt-2"
           >
             <a 
@@ -789,6 +776,21 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
             </a>
           </motion.div>
         )}
+      </div>
+      <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+        {CONTENT.slide5.tracks.map((track, i) => (
+          <motion.div 
+            key={i}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={step >= 2 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+            transition={{ delay: 0.35 + i * 0.1 }}
+            className="p-4 lg:p-6 rounded-[1.5rem] lg:rounded-[2rem] bg-white border border-slate-100 shadow-md group hover:border-brand-blue/40 transition-all relative overflow-hidden flex flex-col hover:-translate-y-1"
+          >
+             <div className="absolute right-0 top-0 w-1 lg:w-1.5 h-full bg-slate-100 group-hover:bg-brand-blue transition-all"></div>
+             <h4 className="text-base lg:text-lg font-black text-brand-blue mb-1 lg:mb-2 italic leading-tight">{track.name}</h4>
+             <p className="text-xs lg:text-sm text-slate-500 font-medium italic leading-relaxed">{track.desc}</p>
+          </motion.div>
+        ))}
       </div>
     </div>
   </div>
@@ -1339,12 +1341,12 @@ const SlideThanks = ({ step }: { step: number }) => {
             <div className="w-40 h-40 lg:w-72 lg:h-72 bg-white rounded-[2.5rem] lg:rounded-[4rem] shadow-2xl border border-slate-100 flex items-center justify-center overflow-hidden p-6 lg:p-12 hover:scale-105 transition-transform group">
               <img 
                 src="/logo.png" 
-                alt="Roqqi Logo" 
+                alt="Talent Preparation Development logo" 
                 className="w-full h-full object-contain group-hover:rotate-3 transition-transform"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.onerror = null;
-                  target.src = 'https://ui-avatars.com/api/?name=R&background=344a92&color=fff';
+                  target.src = 'https://ui-avatars.com/api/?name=TPD&background=344a92&color=fff';
                 }}
               />
             </div>
@@ -1376,7 +1378,7 @@ const SlideThanks = ({ step }: { step: number }) => {
             <div className="w-40 h-40 lg:w-72 lg:h-72 bg-white rounded-[2.5rem] lg:rounded-[4rem] shadow-2xl border border-slate-100 flex items-center justify-center overflow-hidden p-4 lg:p-6 hover:scale-105 transition-transform group">
               <img 
                 src="/intro-logo.png" 
-                alt="90x90 Logo" 
+                alt="Talent Preparation Development logo" 
                 className="w-full h-full object-contain group-hover:-rotate-3 transition-transform"
               />
             </div>
