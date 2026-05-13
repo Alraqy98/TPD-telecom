@@ -1,0 +1,389 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --color-brand-blue: #344a92;
+  --color-brand-orange: #5c77cc;
+  --color-brand-dark: #1e293b;
+  --color-brand-light: #f8fafc;
+  --color-brand-slate: #334155;
+}
+
+body {
+  @apply bg-brand-light text-brand-dark font-sans antialiased;
+  direction: rtl;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: white;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #344a92;
+}
+
+.glass-panel {
+  @apply bg-white/80 backdrop-blur-md border border-slate-200/50 shadow-sm;
+}
+
+.presentation-slide {
+  @apply w-full h-full p-4 md:p-6 lg:p-8 flex flex-col justify-center relative overflow-hidden;
+}
+
+.grid-background {
+  background-image: 
+    linear-gradient(#e5e7eb 1px, transparent 1px),
+    linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: center center;
+}
+
+.orange-gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-orange to-brand-blue;
+}
+
+.pdf-deck {
+  width: 100%;
+}
+
+.pdf-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  break-after: page;
+  page-break-after: always;
+}
+
+.pdf-slide-shell {
+  width: 100%;
+  max-width: 1400px;
+  height: calc(100vh - 48px);
+  min-height: 700px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.pdf-scale {
+  width: 100%;
+  height: 100%;
+}
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: auto;
+    overflow: visible !important;
+    background: #f8fafc !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /*
+   * Chrome “Save as PDF” often paints box-shadows, backdrop-blur, filters, and running
+   * animations as black/dark rectangles. Strip them for this app when printing (#root).
+   */
+  #root,
+  #root *,
+  #root *::before,
+  #root *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .pdf-page {
+    min-height: 100vh;
+    padding: 12mm;
+    break-after: page;
+    page-break-after: always;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    overflow: hidden;
+  }
+
+  .pdf-slide-shell {
+    width: 100%;
+    height: 185mm;
+    min-height: 180mm;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  .pdf-scale {
+    transform: scale(0.88);
+    transform-origin: top center;
+    width: 113.64%;
+    height: 113.64%;
+  }
+
+  .pdf-slide-shell .presentation-slide {
+    overflow: hidden !important;
+    max-height: 100% !important;
+    padding: 12px 18px !important;
+  }
+
+  /*
+   * PDF fixes only for slides that had clipping (deep dive outcomes,
+   * case study, activation phase, partnership). Other slides unchanged.
+   */
+  [data-pdf-slide="slide7"] .pdf-scale,
+  [data-pdf-slide="slide8"] .pdf-scale,
+  [data-pdf-slide="slide9"] .pdf-scale,
+  [data-pdf-slide="slide10"] .pdf-scale {
+    transform: scale(0.8);
+    transform-origin: center top;
+  }
+
+  /* Slides 7 & 8: denser layout only — same box model as default .pdf-scale (no negative margins) */
+  [data-pdf-slide="slide7"] .pdf-scale,
+  [data-pdf-slide="slide8"] .pdf-scale {
+    transform: scale(0.74) !important;
+    transform-origin: top center;
+    width: 113.64%;
+    height: 113.64%;
+  }
+
+  [data-pdf-slide="slide7"].pdf-page,
+  [data-pdf-slide="slide8"].pdf-page {
+    align-items: flex-start;
+  }
+
+  [data-pdf-slide="slide7"] .pdf-slide-shell,
+  [data-pdf-slide="slide8"] .pdf-slide-shell {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  /* Slide 7: drop calc() height trap so cards can show full footers */
+  [data-pdf-slide="slide7"] .pdf-print-outcomes-body {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    flex: 0 1 auto !important;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+    gap: 0.75rem !important;
+  }
+
+  [data-pdf-slide="slide7"] .pdf-print-outcome-card {
+    min-height: 0 !important;
+    padding: 1rem 1.25rem !important;
+  }
+
+  [data-pdf-slide="slide7"] .pdf-print-outcome-card .mt-8 {
+    margin-top: 0.65rem !important;
+  }
+
+  [data-pdf-slide="slide7"] .pdf-print-outcome-card .pt-8 {
+    padding-top: 0.65rem !important;
+  }
+
+  /* Slide 8: slightly tighter gaps so more fits inside the shell (still clipped, not spilled) */
+  [data-pdf-slide="slide8"] .pdf-print-case-grid {
+    gap: 0.5rem !important;
+  }
+
+  [data-pdf-slide="slide8"] .pdf-print-case-sidebar {
+    gap: 0.35rem !important;
+  }
+
+  [data-pdf-slide="slide7"] .pdf-slide-shell .presentation-slide,
+  [data-pdf-slide="slide8"] .pdf-slide-shell .presentation-slide {
+    justify-content: flex-start !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  [data-pdf-slide="slide8"] .min-h-0 {
+    min-height: auto !important;
+  }
+
+  /*
+   * Slides 9 & 10: on-screen they fill the frame; PDF looked "empty" because scale was
+   * too low (~0.72–0.74). Match reference density: larger scale + roomier type/padding.
+   */
+  [data-pdf-slide="slide9"] .pdf-scale {
+    transform: scale(0.84) !important;
+    transform-origin: top center;
+    width: 113.64%;
+    height: 113.64%;
+  }
+
+  [data-pdf-slide="slide9"].pdf-page {
+    align-items: flex-start;
+  }
+
+  [data-pdf-slide="slide9"] .pdf-slide-shell {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  [data-pdf-slide="slide9"] .pdf-slide-shell .presentation-slide {
+    justify-content: flex-start !important;
+    padding-top: 12px !important;
+    padding-bottom: 10px !important;
+  }
+
+  [data-pdf-slide="slide9"] .presentation-slide > .border-b-2 {
+    padding-bottom: 0.65rem !important;
+    margin-bottom: 0 !important;
+  }
+
+  [data-pdf-slide="slide9"] .presentation-slide h2 {
+    font-size: 1.85rem !important;
+    line-height: 1.15 !important;
+    padding-top: 0 !important;
+  }
+
+  [data-pdf-slide="slide9"] .presentation-slide > .border-b-2 p {
+    font-size: 1.05rem !important;
+    line-height: 1.2 !important;
+  }
+
+  [data-pdf-slide="slide9"] .presentation-slide .border-b-2 + * {
+    margin-top: 0.4rem;
+  }
+
+  [data-pdf-slide="slide9"] .pdf-print-slide9-action {
+    align-items: flex-start !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0.65rem 0.75rem !important;
+  }
+
+  [data-pdf-slide="slide9"] .pdf-print-slide9-action span {
+    font-size: 0.82rem !important;
+    line-height: 1.3 !important;
+    word-break: break-word;
+  }
+
+  [data-pdf-slide="slide9"] .min-h-0.grid {
+    gap: 0.65rem !important;
+  }
+
+  [data-pdf-slide="slide9"] .overflow-hidden.shadow-inner {
+    padding: 0.85rem 1rem !important;
+  }
+
+  [data-pdf-slide="slide9"] .shadow-inner .grid.grid-cols-2 {
+    gap: 0.45rem !important;
+  }
+
+  [data-pdf-slide="slide9"] .shadow-inner h4 {
+    font-size: 0.78rem !important;
+    margin-bottom: 0.35rem !important;
+  }
+
+  [data-pdf-slide="slide9"] .border-t.border-slate-200 {
+    padding-top: 0.55rem !important;
+    margin-top: 0.35rem !important;
+  }
+
+  [data-pdf-slide="slide9"] .border-t.border-slate-200 .flex.flex-wrap > * {
+    font-size: 0.88rem !important;
+    line-height: 1.3 !important;
+    padding: 0.45rem 0.85rem !important;
+  }
+
+  /* Slide 10 (Partnership): same “full slide” treatment */
+  [data-pdf-slide="slide10"] .pdf-scale {
+    transform: scale(0.84) !important;
+    transform-origin: top center;
+    width: 113.64%;
+    height: 113.64%;
+  }
+
+  [data-pdf-slide="slide10"].pdf-page {
+    align-items: flex-start;
+  }
+
+  [data-pdf-slide="slide10"] .pdf-slide-shell {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  [data-pdf-slide="slide10"] .pdf-slide-shell .presentation-slide {
+    justify-content: flex-start !important;
+    padding-top: 12px !important;
+    padding-bottom: 10px !important;
+    gap: 0.65rem !important;
+  }
+
+  [data-pdf-slide="slide10"] .presentation-slide h2 {
+    font-size: 1.75rem !important;
+    line-height: 1.15 !important;
+  }
+
+  [data-pdf-slide="slide10"] .presentation-slide > .border-b-2 p {
+    font-size: 1.05rem !important;
+  }
+
+  [data-pdf-slide="slide10"] .presentation-slide .border-b-2 {
+    padding-bottom: 0.5rem !important;
+  }
+
+  [data-pdf-slide="slide10"] .grid.grid-cols-2 {
+    gap: 0.55rem !important;
+  }
+
+  [data-pdf-slide="slide10"] .grid.grid-cols-2 > div span {
+    font-size: 0.88rem !important;
+    line-height: 1.3 !important;
+  }
+
+  [data-pdf-slide="slide10"] .bg-green-600 {
+    padding: 0.85rem 1rem !important;
+  }
+
+  [data-pdf-slide="slide10"] .bg-green-600 h4 {
+    font-size: 1rem !important;
+    line-height: 1.25 !important;
+  }
+
+  [data-pdf-slide="slide10"] .bg-green-600 .flex.flex-wrap > div {
+    font-size: 0.88rem !important;
+    line-height: 1.3 !important;
+    padding: 0.38rem 0.65rem !important;
+  }
+
+  [data-pdf-slide="slide10"] .text-center.p-2 p {
+    font-size: 0.98rem !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Thanks slide: contact name must print at full opacity (motion delays otherwise freeze it) */
+  [data-pdf-slide="thanks"] .thanks-contact-name {
+    color: #344a92 !important;
+    opacity: 1 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
