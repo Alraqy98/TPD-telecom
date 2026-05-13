@@ -290,13 +290,13 @@ const SlideIntroLogo = ({ step }: { step: number }) => (
       className="flex items-center justify-center w-full max-w-5xl"
     >
       <img
-        src="/logo.png"
-        alt="Talent Preparation Development logo"
+        src="/logo-90x90.png"
+        alt="90x90 نقطة تحول"
         className="max-h-[78vh] max-w-[min(92vw,56rem)] w-auto h-auto object-contain drop-shadow-sm"
         onError={(e) => {
           const t = e.target as HTMLImageElement;
           t.onerror = null;
-          t.src = '/intro-logo.png';
+          t.src = '/logo.png';
         }}
       />
     </motion.div>
@@ -1351,15 +1351,15 @@ const SlideThanks = ({ step }: { step: number }) => {
             transition={isPdfExport ? pdfMotion.transition : { delay: 0.6 }}
             className="flex flex-col items-center shrink-0"
           >
-            <div className="w-40 h-40 lg:w-72 lg:h-72 bg-white rounded-[2.5rem] lg:rounded-[4rem] shadow-2xl border border-slate-100 flex items-center justify-center overflow-hidden p-6 lg:p-12 hover:scale-105 transition-transform group">
+            <div className="w-40 h-40 lg:w-72 lg:h-72 bg-white rounded-[2.5rem] lg:rounded-[4rem] shadow-2xl border border-slate-100 flex items-center justify-center overflow-hidden p-4 lg:p-8 hover:scale-105 transition-transform group">
               <img 
-                src="/logo.png" 
-                alt="Talent Preparation Development logo" 
+                src="/logo-90x90.png" 
+                alt="90x90 نقطة تحول" 
                 className="w-full h-full object-contain group-hover:rotate-3 transition-transform"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.onerror = null;
-                  target.src = 'https://ui-avatars.com/api/?name=TPD&background=344a92&color=fff';
+                  target.src = '/logo.png';
                 }}
               />
             </div>
