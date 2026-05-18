@@ -1,0 +1,40 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&display=swap');
+
+@theme {
+  --font-sans: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  --color-primary-blue: #2563eb;
+  --color-primary-blue-light: #60a5fa;
+  --color-primary-blue-dark: #1e3a8a;
+  --color-accent-orange: #f97316;
+  --color-accent-gold: #fbbf24;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.03) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.03) 0px, transparent 50%);
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  body, html, #root {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
