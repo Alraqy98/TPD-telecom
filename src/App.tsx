@@ -44,6 +44,9 @@ import {
   PolarRadiusAxis
 } from 'recharts';
 import { CONTENT } from './constants';
+import { AssessmentOverlay } from './components/AssessmentOverlay';
+import { useAssessment } from './context/AssessmentContext';
+import { trackIdToSlideIndex } from './assessment/types';
 
 const SLIDES = [
   'slideIntroLogo',
@@ -70,6 +73,7 @@ export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(0);
+  const { isOverlayOpen } = useAssessment();
   const isPdfMode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('pdf');
 
   // Define max steps for each slide (0-indexed)
@@ -213,6 +217,7 @@ export default function App() {
       <main 
         className="relative flex-grow overflow-hidden cursor-pointer"
         onClick={(e) => {
+          if (isOverlayOpen) return;
           // Prevent advancing if clicking a link or button
           if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('a')) return;
           paginate(1);
@@ -254,10 +259,12 @@ export default function App() {
           </button>
         </div>
 
-        <div className="flex flex-col items-end gap-2 pointer-events-auto">
+        <motion.div className="flex flex-col items-end gap-2 pointer-events-auto">
            <span className="text-[10px] font-black tracking-widest text-slate-300 uppercase">Slide {currentSlide + 1} / {SLIDES.length}</span>
-        </div>
+        </motion.div>
       </footer>
+
+      <AnimatePresence>{isOverlayOpen ? <AssessmentOverlay /> : null}</AnimatePresence>
     </div>
   );
 }
@@ -822,7 +829,9 @@ const SlideTimeline = ({ step }: { step: number }) => (
 
 const SlidePhaseOne = ({ step }: { step: number }) => {
   const [arabicTitle, englishTitle] = CONTENT.slide5.title.split(' | ');
-  
+  const { result, openAssessment } = useAssessment();
+  const recommendedTrackIndex = result ? trackIdToSlideIndex(result.trackId) : null;
+
   return (
     <div className="presentation-slide space-y-4 lg:space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 lg:gap-4 border-b-2 border-slate-100 pb-3 lg:pb-4">
@@ -835,8 +844,28 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
              {CONTENT.slide5.subtitle}
            </p>
          </div>
-         <div className="bg-brand-blue/5 px-6 lg:px-8 py-3 lg:py-5 rounded-full border border-brand-blue/10 shadow-sm">
-           <span className="text-lg lg:text-3xl font-black uppercase tracking-[0.1em] text-brand-blue leading-tight whitespace-nowrap">{CONTENT.slide5.intro}</span>
+         <div className="bg-brand-blue/5 px-6 lg:px-8 py-3 lg:py-5 rounded-full border border-brand-blue/10 shadow-sm text-center">
+           {result ? (
+             <motion.div
+               initial={{ opacity: 0, scale: 0.95 }}
+               animate={{ opacity: 1, scale: 1 }}
+               className="space-y-1"
+             >
+               <span className="block text-xs lg:text-sm font-black text-brand-orange uppercase tracking-widest">
+                 نتائج التقييم
+               </span>
+               <span className="block text-base lg:text-2xl font-black text-brand-blue leading-tight">
+                 RAI {result.raiScore}% · الإيرادات {result.revenueScore}%
+               </span>
+               <span className="block text-[10px] lg:text-xs font-bold text-slate-500 italic max-w-md">
+                 {result.trackTitle}
+               </span>
+             </motion.div>
+           ) : (
+             <span className="text-lg lg:text-3xl font-black uppercase tracking-[0.1em] text-brand-blue leading-tight whitespace-nowrap">
+               {CONTENT.slide5.intro}
+             </span>
+           )}
          </div>
       </div>
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
@@ -864,15 +893,19 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
             transition={{ delay: 0.15 }}
             className="pt-2"
           >
-            <a 
-              href="https://tpd-assessment.vercel.app/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="p-4 lg:p-6 bg-brand-blue hover:bg-brand-orange text-white font-black italic text-center rounded-[2rem] shadow-xl transition-all flex items-center justify-center gap-4 group border-3 border-white/20 hover:scale-105 active:scale-95"
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                openAssessment();
+              }}
+              className="w-full p-4 lg:p-6 bg-brand-blue hover:bg-brand-orange text-white font-black italic text-center rounded-[2rem] shadow-xl transition-all flex items-center justify-center gap-4 group border-3 border-white/20 hover:scale-105 active:scale-95"
             >
-              <span className="text-lg lg:text-2xl">ابدأ التقييم الآن</span>
+              <span className="text-lg lg:text-2xl">
+                {result ? 'إعادة التقييم' : 'ابدأ التقييم الآن'}
+              </span>
               <Globe size={28} className="group-hover:rotate-12 transition-transform" />
-            </a>
+            </button>
           </motion.div>
         )}
       </div>
@@ -883,9 +916,20 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={step >= 2 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
             transition={{ delay: 0.35 + i * 0.1 }}
-            className="p-4 lg:p-6 rounded-[1.5rem] lg:rounded-[2rem] bg-white border border-slate-100 shadow-md group hover:border-brand-blue/40 transition-all relative overflow-hidden flex flex-col hover:-translate-y-1"
+            className={`p-4 lg:p-6 rounded-[1.5rem] lg:rounded-[2rem] bg-white border shadow-md group transition-all relative overflow-hidden flex flex-col hover:-translate-y-1 ${
+              recommendedTrackIndex === i
+                ? 'border-brand-orange ring-2 ring-brand-orange/30 shadow-xl shadow-brand-orange/10'
+                : 'border-slate-100 hover:border-brand-blue/40'
+            }`}
           >
-             <div className="absolute right-0 top-0 w-1 lg:w-1.5 h-full bg-slate-100 group-hover:bg-brand-blue transition-all"></div>
+             <div className={`absolute right-0 top-0 w-1 lg:w-1.5 h-full transition-all ${
+               recommendedTrackIndex === i ? 'bg-brand-orange' : 'bg-slate-100 group-hover:bg-brand-blue'
+             }`} />
+             {recommendedTrackIndex === i && (
+               <span className="absolute left-3 top-3 text-[9px] lg:text-[10px] font-black uppercase tracking-wider text-brand-orange bg-brand-orange/10 px-2 py-1 rounded-full">
+                 المسار المقترح
+               </span>
+             )}
              <h4 className="text-base lg:text-lg font-black text-brand-blue mb-1 lg:mb-2 italic leading-tight">{track.name}</h4>
              <p className="text-xs lg:text-sm text-slate-500 font-medium italic leading-relaxed">{track.desc}</p>
           </motion.div>
