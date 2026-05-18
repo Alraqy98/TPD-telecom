@@ -46,7 +46,6 @@ import {
 import { CONTENT } from './constants';
 import { AssessmentOverlay } from './components/AssessmentOverlay';
 import { useAssessment } from './context/AssessmentContext';
-import { trackIdToSlideIndex } from './assessment/types';
 
 const SLIDES = [
   'slideIntroLogo',
@@ -830,7 +829,8 @@ const SlideTimeline = ({ step }: { step: number }) => (
 const SlidePhaseOne = ({ step }: { step: number }) => {
   const [arabicTitle, englishTitle] = CONTENT.slide5.title.split(' | ');
   const { result, openAssessment } = useAssessment();
-  const recommendedTrackIndex = result ? trackIdToSlideIndex(result.trackId) : null;
+  const isAccelerationOutcome = result?.trackId === 'acceleration';
+  const recommendedTrackIndex = isAccelerationOutcome ? 1 : null;
 
   return (
     <div className="presentation-slide space-y-4 lg:space-y-6">
@@ -845,14 +845,14 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
            </p>
          </div>
          <div className="bg-brand-blue/5 px-6 lg:px-8 py-3 lg:py-5 rounded-full border border-brand-blue/10 shadow-sm text-center">
-           {result ? (
+           {isAccelerationOutcome && result ? (
              <motion.div
                initial={{ opacity: 0, scale: 0.95 }}
                animate={{ opacity: 1, scale: 1 }}
                className="space-y-1"
              >
                <span className="block text-xs lg:text-sm font-black text-brand-orange uppercase tracking-widest">
-                 نتائج التقييم
+                 نتائج التقييم — مسار التسارع
                </span>
                <span className="block text-base lg:text-2xl font-black text-brand-blue leading-tight">
                  RAI {result.raiScore}% · الإيرادات {result.revenueScore}%
@@ -902,7 +902,7 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
               className="w-full p-4 lg:p-6 bg-brand-blue hover:bg-brand-orange text-white font-black italic text-center rounded-[2rem] shadow-xl transition-all flex items-center justify-center gap-4 group border-3 border-white/20 hover:scale-105 active:scale-95"
             >
               <span className="text-lg lg:text-2xl">
-                {result ? 'إعادة التقييم' : 'ابدأ التقييم الآن'}
+                {isAccelerationOutcome ? 'إعادة التقييم' : 'ابدأ التقييم الآن'}
               </span>
               <Globe size={28} className="group-hover:rotate-12 transition-transform" />
             </button>

@@ -76,12 +76,17 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
       if (allowedOrigins.size > 0 && !allowedOrigins.has(event.origin)) return;
       const payload = event.data.payload as AssessmentSessionResult;
       if (payload?.raiScore == null || payload?.revenueScore == null) return;
-      setResult(payload);
+      // Only the Acceleration track updates the deck; other outcomes keep the slide as-is.
+      if (payload.trackId === 'acceleration') {
+        setResult(payload);
+      } else {
+        clearResult();
+      }
       setIsOverlayOpen(false);
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, [setResult]);
+  }, [setResult, clearResult]);
 
   const value = useMemo(
     () => ({
