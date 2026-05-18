@@ -23,20 +23,10 @@ type AssessmentContextValue = {
 
 const AssessmentContext = createContext<AssessmentContextValue | null>(null);
 
-function readStoredResult(): AssessmentSessionResult | null {
-  try {
-    const raw = sessionStorage.getItem(ASSESSMENT_STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw) as AssessmentSessionResult;
-  } catch {
-    return null;
-  }
-}
-
 export function AssessmentProvider({ children }: { children: ReactNode }) {
-  const [result, setResultState] = useState<AssessmentSessionResult | null>(() =>
-    readStoredResult()
-  );
+  // Do not restore sessionStorage on load — scores appear only after completing
+  // the in-deck assessment this session (avoids stale RAI/revenue from past tests).
+  const [result, setResultState] = useState<AssessmentSessionResult | null>(null);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
   const setResult = useCallback((next: AssessmentSessionResult) => {

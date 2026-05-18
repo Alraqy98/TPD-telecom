@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ChevronLeft, 
@@ -58,29 +58,11 @@ import {
   getAccelerationTrackInsight,
   getAccelerationTrackInsightShort,
 } from './assessment/accelerationInsight';
-
-const SLIDES = [
-  'slideIntroLogo',
-  'hero',
-  'slideConcept',
-  'slide3',
-  'slide4',
-  'slide2',
-  'slideGap',
-  'slide8',
-  'slideTimeline',
-  'slide5',
-  'slideAccelPositioning',
-  'slideAccelDeepDive',
-  'slideAccelObjective',
-  'slideAccelValue',
-  'slide6',
-  'slide7',
-  'slide9',
-  'slide10',
-  'slide11',
-  'thanks'
-];
+import {
+  buildPresentationSlides,
+  PDF_SLIDE_DECK,
+  type PresentationSlideId,
+} from './assessment/slideDeck';
 
 const COLORS = ['#344a92', '#5c77cc', '#1e293b', '#64748b'];
 
@@ -88,12 +70,24 @@ export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(0);
-  const { isOverlayOpen } = useAssessment();
+  const { isOverlayOpen, result } = useAssessment();
   const isPdfMode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('pdf');
 
+  const isAccelerationOutcome = result?.trackId === 'acceleration';
+  const slides = useMemo(
+    () =>
+      isPdfMode
+        ? PDF_SLIDE_DECK
+        : buildPresentationSlides(isAccelerationOutcome),
+    [isPdfMode, isAccelerationOutcome]
+  );
+
+  useEffect(() => {
+    setCurrentSlide((prev) => Math.min(prev, Math.max(0, slides.length - 1)));
+  }, [slides.length]);
+
   // Define max steps for each slide (0-indexed)
-  const getStepsForSlide = (index: number) => {
-    const slideId = SLIDES[index];
+  const getStepsForSlide = (slideId: PresentationSlideId) => {
     switch (slideId) {
       case 'slideIntroLogo': return 0;
       case 'hero': return 0;
@@ -120,7 +114,7 @@ export default function App() {
   };
 
   const paginate = useCallback((newDirection: number) => {
-    const maxSteps = getStepsForSlide(currentSlide);
+    const maxSteps = getStepsForSlide(slides[currentSlide]);
     
     // forward
     if (newDirection > 0) {
@@ -139,12 +133,12 @@ export default function App() {
 
     // if we reached limits, change slide
     const next = currentSlide + newDirection;
-    if (next >= 0 && next < SLIDES.length) {
+    if (next >= 0 && next < slides.length) {
       setDirection(newDirection);
       setCurrentSlide(next);
-      setCurrentStep(newDirection > 0 ? 0 : getStepsForSlide(next));
+      setCurrentStep(newDirection > 0 ? 0 : getStepsForSlide(slides[next]));
     }
-  }, [currentSlide, currentStep]);
+  }, [currentSlide, currentStep, slides]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -188,11 +182,11 @@ export default function App() {
   if (isPdfMode) {
     return (
       <div className="pdf-deck bg-brand-light text-brand-dark font-sans rtl">
-        {SLIDES.map((slideId, index) => (
+        {slides.map((slideId, index) => (
           <section key={`${slideId}-${index}`} className="pdf-page" data-pdf-slide={slideId}>
             <div className="pdf-slide-shell">
               <div className="pdf-scale">
-                {renderSlide(index, getStepsForSlide(index))}
+                {renderSlide(slideId, getStepsForSlide(slideId))}
               </div>
             </div>
           </section>
@@ -211,7 +205,7 @@ export default function App() {
 
       {/* Floating Logo - Only on Hero */}
       <AnimatePresence>
-        {SLIDES[currentSlide] === 'hero' && (
+        {slides[currentSlide] === 'hero' && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.8, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -253,7 +247,7 @@ export default function App() {
             className="absolute inset-0 flex items-center justify-center p-4 md:p-8"
           >
              <div className="w-full h-full max-w-7xl flex items-center justify-center">
-               {renderSlide(currentSlide, currentStep)}
+               {renderSlide(slides[currentSlide], currentStep)}
              </div>
           </motion.div>
         </AnimatePresence>
@@ -271,7 +265,7 @@ export default function App() {
           </button>
           <button 
             onClick={() => paginate(1)}
-            disabled={currentSlide === SLIDES.length - 1}
+            disabled={currentSlide === slides.length - 1}
             className="w-14 h-14 rounded-2xl bg-brand-blue shadow-xl shadow-brand-blue/20 flex items-center justify-center opacity-30 hover:opacity-100 group hover:scale-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-95 border border-brand-blue"
           >
             <ArrowLeft size={24} className="text-white" />
@@ -279,7 +273,7 @@ export default function App() {
         </div>
 
         <motion.div className="flex flex-col items-end gap-2 pointer-events-auto">
-           <span className="text-[10px] font-black tracking-widest text-slate-300 uppercase">Slide {currentSlide + 1} / {SLIDES.length}</span>
+           <span className="text-[10px] font-black tracking-widest text-slate-300 uppercase">Slide {currentSlide + 1} / {slides.length}</span>
         </motion.div>
       </footer>
 
@@ -288,8 +282,8 @@ export default function App() {
   );
 }
 
-function renderSlide(index: number, step: number) {
-  switch (SLIDES[index]) {
+function renderSlide(slideId: PresentationSlideId, step: number) {
+  switch (slideId) {
     case 'slideIntroLogo': return <SlideIntroLogo step={step} />;
     case 'hero': return <SlideHero step={step} />;
     case 'slideConcept': return <SlideConcept step={step} />;
@@ -874,7 +868,7 @@ const SlideTimeline = ({ step }: { step: number }) => (
 
 const SlidePhaseOne = ({ step }: { step: number }) => {
   const [arabicTitle, englishTitle] = CONTENT.slide5.title.split(' | ');
-  const { result, openAssessment } = useAssessment();
+  const { result, openAssessment, clearResult } = useAssessment();
   const isAccelerationOutcome = result?.trackId === 'acceleration';
   const recommendedTrackIndex = isAccelerationOutcome ? 1 : null;
   const accelerationInsight =
@@ -947,6 +941,7 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
+                if (isAccelerationOutcome) clearResult();
                 openAssessment();
               }}
               className="w-full p-4 lg:p-6 bg-brand-blue hover:bg-brand-orange text-white font-black italic text-center rounded-[2rem] shadow-xl transition-all flex items-center justify-center gap-4 group border-3 border-white/20 hover:scale-105 active:scale-95"
