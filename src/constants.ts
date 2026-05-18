@@ -8,6 +8,12 @@ export const CONTENT = {
     title: "90x90 | نقطة تحول",
     tagline: "بين الإمكانات ... والنتائج",
     description: "برنامج تنفيذي لتفعيل الأداء والنمو Execution-Led Business Activation Framework",
+    frameworkDual: {
+      primaryAr: "استعادة الحوكمة والإيرادات",
+      primaryEn: "Governance & Revenue Recovery",
+      secondaryAr: "إطار مؤسسي لتحسين وتسريع النمو",
+      secondaryEn: "Enterprise Growth Optimization & Acceleration Framework"
+    },
     consultant: "م. رائد أبوعيسى",
     role: "مستشار الحوكمة التشغيلية و نمو الاعمال",
     subrole: "Operational Governance and Business Growth Consultant"
@@ -59,7 +65,8 @@ export const CONTENT = {
     focus: [
       { title: "الحوكمة التشغيلية", eng: "(Operational Governance)" },
       { title: "تفعيل الإيرادات", eng: "(Revenue Activation)" },
-      { title: "الانضباط التنفيذي", eng: "(Execution Discipline)" }
+      { title: "الانضباط التنفيذي", eng: "(Execution Discipline)" },
+      { title: "تحسين وتسريع النمو", eng: "(Growth Optimization & Acceleration)" }
     ]
   },
   slide4: {
@@ -151,9 +158,85 @@ export const CONTENT = {
       { name: "المسار المختلط (Hybrid Track™)", desc: "للشركات التي تحتاج إلى معالجة تشغيلية وفي الايرادات بالتوازي." }
     ]
   },
+  slideAccelPositioning: {
+    titleAr: "تحديد مرحلة التسريع",
+    titleEn: "Acceleration Positioning",
+    introAr: "المنظمات الواقعة ضمن مرحلة التسريع تتميز عادةً بـ:",
+    introEn: "Organizations positioned within the Acceleration Stage are typically characterized by:",
+    characteristics: [
+      { ar: "نضج تشغيلي قوي", en: "Strong operational maturity" },
+      { ar: "هياكل حوكمة راسخة", en: "Established governance structures" },
+      { ar: "تكامل ERP و CRM", en: "ERP & CRM integration" },
+      { ar: "نمو تجاري قابل للقياس", en: "Measurable commercial growth" },
+      { ar: "بيئات تقارير منظمة", en: "Structured reporting environments" }
+    ],
+    transitionAr: "ومع ذلك، مع تزايد تعقيد المنظمة، قد يظل تسريع النمو مقيداً بكفاءات تنفيذية وقابلية توسع خفية.",
+    transitionEn: "However, as organizational complexity increases, growth acceleration may still become constrained by hidden execution and scalability inefficiencies.",
+    shiftFromAr: "لم يعد الهدف إعداد الحوكمة.",
+    shiftFromEn: "The objective is no longer governance setup.",
+    shiftToAr: "أصبح الهدف تحسين وتسريع الأداء.",
+    shiftToEn: "The objective becomes acceleration optimization."
+  },
+  slideAccelDeepDive: {
+    titleAr: "التحليل المعمق لكفاءة التسريع",
+    titleEn: "Acceleration Efficiency Deep Dive",
+    subtitleAr: "مصمم للمنظمات التي تعمل بمستويات عالية من النضج التشغيلي والتجاري.",
+    subtitleEn: "Designed for organizations operating at high operational and commercial maturity levels.",
+    qualitative: {
+      titleAr: "التحليل النوعي",
+      titleEn: "Qualitative Analysis",
+      introAr: "يركز على تحديد:",
+      introEn: "Focused on identifying:",
+      items: [
+        { ar: "احتكاكات التنفيذ", en: "Execution friction" },
+        { ar: "الاختناقات التشغيلية", en: "Operational bottlenecks" },
+        { ar: "فجوات التنسيق بين الإدارات", en: "Cross-functional alignment gaps" },
+        { ar: "قيود تدفق القرار", en: "Decision flow constraints" },
+        { ar: "تضارب الأولويات", en: "Prioritization conflicts" },
+        { ar: "ضعف كفاءة التوسع", en: "Scalability inefficiencies" }
+      ]
+    },
+    quantitative: {
+      titleAr: "التحليل الكمي",
+      titleEn: "Quantitative Analysis",
+      introAr: "يركز على قياس:",
+      introEn: "Focused on measuring:",
+      items: [
+        { ar: "معيقات كفاءة التسريع", en: "Acceleration efficiency constraints" },
+        { ar: "حجم تعرض تسرب الإيرادات", en: "Revenue leakage exposure" },
+        { ar: "أثر تسرب العملاء", en: "Churn impact exposure" },
+        { ar: "أثر كفاءة التحويل", en: "Conversion efficiency impact" },
+        { ar: "أثر بطء القرار", en: "Decision delay impact" },
+        { ar: "الاختلالات التشغيلية القابلة للقياس", en: "Measurable operational inefficiencies" }
+      ]
+    }
+  },
+  slideAccelObjective: {
+    titleAr: "هدف التحليل المعمق لمسار التسريع",
+    titleEn: "The Objective of the Acceleration Deep Dive",
+    notAr: "الهدف ليس تحديد ما إذا كانت المنظمة قوية أم ضعيفة.",
+    notEn: "The objective is not determining whether the organization is strong or weak.",
+    isAr: "الهدف هو تحديد أين يمكن تحسين كفاءة التسريع مع تزايد تعقيد المنظمة.",
+    isEn: "The objective is identifying where acceleration efficiency can still be optimized as organizational complexity increases."
+  },
+  slideAccelValue: {
+    titleAr: "لماذا يهم هذا؟",
+    titleEn: "Why This Matters",
+    introAr: "مع توسع المنظمات، قد تبدأ قيود التسريع الخفية بالتأثير على:",
+    introEn: "As organizations scale, hidden acceleration constraints may begin impacting:",
+    impacts: [
+      { ar: "سرعة النمو", en: "Growth velocity" },
+      { ar: "كفاءة التنفيذ", en: "Execution efficiency" },
+      { ar: "مرونة القرار", en: "Decision agility" },
+      { ar: "وضوح الأداء التجاري", en: "Commercial visibility" },
+      { ar: "قابلية التشغيل للتوسع", en: "Operational scalability" }
+    ],
+    closingAr: "كلما أصبحت المنظمة أقوى، زادت أهمية كفاءة التسريع.",
+    closingEn: "The stronger the organization becomes, the more important acceleration efficiency becomes."
+  },
   slide6: {
     title: "المرحلة الثانية — التشخيص المعمق (Deep Dive Assessment)",
-    intro: "ينقسم التشخيص المعمق إلى مسارين رئيسيين:",
+    intro: "ينقسم التشخيص المعمق إلى مسارين رئيسيين (ومسار ثالث لمنظمات مسار التسريع):",
     path1: {
       name: "أولاً — التحليل النوعي (Qualitative Assessment)",
       method: "جاهزية الحوكمة التشغيلية (Operational Governance Readiness™) بمنهجية الأضلاع الأربعة (Four Pillars Methodology™)",

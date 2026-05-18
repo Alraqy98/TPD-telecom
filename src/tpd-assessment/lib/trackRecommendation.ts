@@ -20,15 +20,20 @@ const colorfulClasses = {
   governance_activation: { color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
 };
 
+/** Governance (RAI) and commercial readiness thresholds for Acceleration Track */
+export const GOVERNANCE_THRESHOLD = 70;
+export const COMMERCIAL_READINESS_THRESHOLD = 70;
+
+export function isAccelerationTrack(rai: number, revenue: number): boolean {
+  return rai >= GOVERNANCE_THRESHOLD && revenue >= COMMERCIAL_READINESS_THRESHOLD;
+}
+
 export const getCompanySituation = (
   rai: number,
   rev: number,
   _sector: string | null = null
 ): TrackSituation => {
-  const raiThreshold = 70;
-  const revThreshold = 70;
-
-  if (rai >= raiThreshold && rev < revThreshold) {
+  if (rai >= GOVERNANCE_THRESHOLD && rev < COMMERCIAL_READINESS_THRESHOLD) {
     return {
       id: 'revenue_activation',
       title: 'Revenue Activation Track™️',
@@ -36,15 +41,15 @@ export const getCompanySituation = (
       desc: 'مرحلة تفعيل الإيرادات تعني أن التقييم الأولي يظهر استقراراً في البنية التشغيلية لشركتكم، لكن مع وجود فجوات في نموذج توليد الإيرادات.',
     };
   }
-  if (rai >= raiThreshold && rev >= revThreshold) {
+  if (isAccelerationTrack(rai, rev)) {
     return {
       id: 'acceleration',
       title: 'Acceleration Track™️',
       ...colorfulClasses.acceleration,
-      desc: 'مرحلة التسارع تشير إلى أداء أولي إيجابي وتوازن ملحوظ بين الكفاءة التشغيلية في شركتكم ونتائج الإيرادات.',
+      desc: 'مسار التسريع: جاهزية تشغيلية وإيرادات مرتفعة — يُوجَّه التشخيص المعمّق إلى تحليل كفاءة التسريع بدلاً من مسار التأسيس أو المختلط.',
     };
   }
-  if (rai < raiThreshold && rev < revThreshold) {
+  if (rai < GOVERNANCE_THRESHOLD && rev < COMMERCIAL_READINESS_THRESHOLD) {
     return {
       id: 'foundation',
       title: 'Foundation Track™️',

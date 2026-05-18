@@ -7,9 +7,11 @@ import { Search, Filter, ExternalLink, Calendar, RefreshCcw, LayoutDashboard, Da
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import tpdLogo from './assets/tpd_logo.png';
 import { DeepDive } from './DeepDive';
+import { AccelerationDeepDive } from './AccelerationDeepDive';
 import {
   getCompanySituation,
   buildSessionPayload,
+  isAccelerationTrack,
   type AssessmentSessionPayload,
 } from './lib/trackRecommendation';
 
@@ -664,6 +666,11 @@ const AdminDashboard = ({ onBack }: { onBack: () => void, key?: string }) => {
 
   const stats = calculateStats();
 
+  const selectedUserUsesAccelDeepDive =
+    selectedUser?.raiScore != null &&
+    selectedUser.revenueScore != null &&
+    isAccelerationTrack(selectedUser.raiScore, selectedUser.revenueScore);
+
   return (
     <motion.div 
       initial={{ opacity: 0 }} 
@@ -686,10 +693,18 @@ const AdminDashboard = ({ onBack }: { onBack: () => void, key?: string }) => {
           {selectedUser && !deepDiveMode && (
             <button 
               onClick={() => setDeepDiveMode(true)}
-              className="px-6 py-3 bg-primary-blue border border-transparent rounded-xl text-white hover:bg-primary-blue-dark transition-all flex items-center gap-2 font-bold shadow-lg shadow-primary-blue/20"
+              className={`px-6 py-3 border border-transparent rounded-xl text-white transition-all flex items-center gap-2 font-bold shadow-lg ${
+                selectedUserUsesAccelDeepDive
+                  ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
+                  : 'bg-primary-blue hover:bg-primary-blue-dark shadow-primary-blue/20'
+              }`}
             >
               <Target size={20} />
-              <span className="hidden sm:inline">تقييم Deep Dive</span>
+              <span className="hidden sm:inline">
+                {selectedUserUsesAccelDeepDive
+                  ? 'كفاءة التسريع — Deep Dive'
+                  : 'تقييم Deep Dive'}
+              </span>
             </button>
           )}
           {selectedUser && !deepDiveMode && (
@@ -848,7 +863,11 @@ const AdminDashboard = ({ onBack }: { onBack: () => void, key?: string }) => {
           </div>
         </div>
       ) : deepDiveMode ? (
-        <DeepDive user={selectedUser} onClose={() => setDeepDiveMode(false)} />
+        selectedUserUsesAccelDeepDive ? (
+          <AccelerationDeepDive user={selectedUser} onClose={() => setDeepDiveMode(false)} />
+        ) : (
+          <DeepDive user={selectedUser} onClose={() => setDeepDiveMode(false)} />
+        )
       ) : (
         <AnimatePresence mode="wait">
           <motion.div 

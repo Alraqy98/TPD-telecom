@@ -24,7 +24,8 @@ import {
   Briefcase,
   Quote,
   Clock,
-  Calendar
+  Calendar,
+  Sparkles
 } from 'lucide-react';
 import { 
   PieChart, 
@@ -45,6 +46,13 @@ import {
 } from 'recharts';
 import { CONTENT } from './constants';
 import { AssessmentOverlay } from './components/AssessmentOverlay';
+import {
+  SlideAccelPositioning,
+  SlideAccelDeepDive,
+  SlideAccelObjective,
+  SlideAccelValue,
+} from './components/AccelSlides';
+
 import { useAssessment } from './context/AssessmentContext';
 import {
   getAccelerationTrackInsight,
@@ -62,6 +70,10 @@ const SLIDES = [
   'slide8',
   'slideTimeline',
   'slide5',
+  'slideAccelPositioning',
+  'slideAccelDeepDive',
+  'slideAccelObjective',
+  'slideAccelValue',
   'slide6',
   'slide7',
   'slide9',
@@ -92,6 +104,10 @@ export default function App() {
       case 'slideGap': return 2;
       case 'slideTimeline': return 4;
       case 'slide5': return 3;
+      case 'slideAccelPositioning': return 2;
+      case 'slideAccelDeepDive': return 2;
+      case 'slideAccelObjective': return 1;
+      case 'slideAccelValue': return 2;
       case 'slide6': return 2;
       case 'slide7': return 1;
       case 'slide8': return 4;
@@ -283,6 +299,10 @@ function renderSlide(index: number, step: number) {
     case 'slideGap': return <SlideGrowthGap step={step} />;
     case 'slideTimeline': return <SlideTimeline step={step} />;
     case 'slide5': return <SlidePhaseOne step={step} />;
+    case 'slideAccelPositioning': return <SlideAccelPositioning step={step} />;
+    case 'slideAccelDeepDive': return <SlideAccelDeepDive step={step} />;
+    case 'slideAccelObjective': return <SlideAccelObjective step={step} />;
+    case 'slideAccelValue': return <SlideAccelValue step={step} />;
     case 'slide6': return <SlidePhaseTwo step={step} />;
     case 'slide7': return <SlideOutcomes step={step} />;
     case 'slide8': return <SlideCaseStudy step={step} />;
@@ -347,7 +367,29 @@ const SlideHero = ({ step }: { step: number }) => {
         </motion.p>
       </div>
 
-      <motion.div 
+         <motion.div 
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.55 }}
+        className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 text-sm lg:text-base"
+      >
+        <div className="px-5 py-2.5 rounded-full bg-brand-blue/5 border border-brand-blue/15 text-brand-blue font-bold italic">
+          {CONTENT.hero.frameworkDual.primaryAr}
+          <span className="block text-[10px] font-mono text-brand-blue/60 not-italic mt-0.5">{CONTENT.hero.frameworkDual.primaryEn}</span>
+        </div>
+        <span className="text-brand-orange font-black text-xl">+</span>
+        <motion.div 
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.65 }}
+          className="px-5 py-2.5 rounded-full bg-brand-orange/10 border border-brand-orange/25 text-brand-orange font-bold italic"
+        >
+          {CONTENT.hero.frameworkDual.secondaryAr}
+          <span className="block text-[10px] font-mono text-brand-orange/70 not-italic mt-0.5">{CONTENT.hero.frameworkDual.secondaryEn}</span>
+        </motion.div>
+      </motion.div>
+
+         <motion.div 
         initial={{ opacity: 0, scale: 0.9, y: 50 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ delay: 0.6 }}
@@ -612,13 +654,13 @@ const SlideBuild = ({ step }: { step: number }) => (
         >
           <div className="absolute -top-16 -right-16 w-48 h-48 bg-white/5 rounded-full pointer-events-none group-hover:scale-125 transition-transform"></div>
           <Target size={48} className="text-brand-orange lg:w-20 lg:h-20 animate-bounce" />
-          <div className="space-y-1 text-center relative z-10">
-            <h3 className="text-2xl lg:text-3xl font-black text-white italic leading-tight uppercase tracking-tight">
-              {CONTENT.slide3.focus[2].title}
-            </h3>
-            <p className="text-[10px] lg:text-sm font-black font-mono text-brand-orange tracking-widest italic uppercase">
-              {CONTENT.slide3.focus[2].eng}
-            </p>
+          <div className="space-y-3 text-center relative z-10 w-full">
+            {CONTENT.slide3.focus.slice(2).map((f, i) => (
+              <div key={i} className={i > 0 ? 'pt-3 border-t border-white/15' : ''}>
+                <h3 className="text-xl lg:text-2xl font-black text-white italic leading-tight">{f.title}</h3>
+                <p className="text-[10px] lg:text-xs font-black font-mono text-brand-orange tracking-widest italic uppercase">{f.eng}</p>
+              </div>
+            ))}
           </div>
           <div className="px-4 py-1 bg-white/10 rounded-full border border-white/20 mt-2">
              <span className="text-[9px] lg:text-xs text-white/80 font-bold italic">النتيجة النهائية والمنشودة</span>
