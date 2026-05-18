@@ -13,7 +13,6 @@ export default defineConfig(({mode}) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
-        '@tpd-assessment': path.resolve(__dirname, '../TPD assessment/src'),
       },
     },
     server: {

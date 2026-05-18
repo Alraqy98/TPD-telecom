@@ -53,8 +53,27 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
   const closeAssessment = useCallback(() => setIsOverlayOpen(false), []);
 
   useEffect(() => {
+    const allowedOrigins = new Set(
+      [
+        import.meta.env.VITE_ASSESSMENT_URL,
+        'https://tpd-assessment.vercel.app',
+        'http://localhost:3001',
+        'http://127.0.0.1:3001',
+      ]
+        .filter(Boolean)
+        .map((url) => {
+          try {
+            return new URL(url as string).origin;
+          } catch {
+            return null;
+          }
+        })
+        .filter((origin): origin is string => Boolean(origin))
+    );
+
     const onMessage = (event: MessageEvent) => {
       if (event.data?.type !== 'TPD_ASSESSMENT_COMPLETE') return;
+      if (allowedOrigins.size > 0 && !allowedOrigins.has(event.origin)) return;
       const payload = event.data.payload as AssessmentSessionResult;
       if (payload?.raiScore == null || payload?.revenueScore == null) return;
       setResult(payload);

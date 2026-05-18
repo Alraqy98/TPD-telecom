@@ -1,30 +1,24 @@
 import { motion } from 'motion/react';
 import { X } from 'lucide-react';
-import { MemoryRouter } from 'react-router-dom';
-import { AssessmentApp } from '@tpd-assessment/App';
 import { useAssessment } from '../context/AssessmentContext';
-import type { AssessmentSessionResult } from '../assessment/types';
-import '@tpd-assessment/index.css';
 
-const assessmentApiBase =
-  import.meta.env.VITE_ASSESSMENT_API_URL?.replace(/\/$/, '') ?? '';
+const assessmentBaseUrl = (
+  import.meta.env.VITE_ASSESSMENT_URL ?? 'https://tpd-assessment.vercel.app'
+).replace(/\/$/, '');
+
+const assessmentEmbedUrl = `${assessmentBaseUrl}/telecommunication?embed=1`;
 
 export function AssessmentOverlay() {
-  const { isOverlayOpen, closeAssessment, setResult } = useAssessment();
+  const { isOverlayOpen, closeAssessment } = useAssessment();
 
   if (!isOverlayOpen) return null;
-
-  const handleComplete = (payload: AssessmentSessionResult) => {
-    setResult(payload);
-    closeAssessment();
-  };
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex flex-col bg-brand-light/95 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex flex-col bg-brand-light"
       role="dialog"
       aria-modal="true"
       aria-label="تقييم الجاهزية"
@@ -41,16 +35,12 @@ export function AssessmentOverlay() {
         </button>
       </div>
 
-      <div className="relative min-h-0 flex-1 overflow-hidden">
-        <MemoryRouter initialEntries={['/telecommunication']}>
-          <AssessmentApp
-            initialSector="telecom"
-            embedded
-            apiBaseUrl={assessmentApiBase}
-            onSessionComplete={handleComplete}
-          />
-        </MemoryRouter>
-      </div>
+      <iframe
+        title="TPD Assessment"
+        src={assessmentEmbedUrl}
+        className="min-h-0 w-full flex-1 border-0 bg-white"
+        allow="clipboard-write"
+      />
     </motion.div>
   );
 }
