@@ -46,6 +46,10 @@ import {
 import { CONTENT } from './constants';
 import { AssessmentOverlay } from './components/AssessmentOverlay';
 import { useAssessment } from './context/AssessmentContext';
+import {
+  getAccelerationTrackInsight,
+  getAccelerationTrackInsightShort,
+} from './assessment/accelerationInsight';
 
 const SLIDES = [
   'slideIntroLogo',
@@ -831,6 +835,10 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
   const { result, openAssessment } = useAssessment();
   const isAccelerationOutcome = result?.trackId === 'acceleration';
   const recommendedTrackIndex = isAccelerationOutcome ? 1 : null;
+  const accelerationInsight =
+    isAccelerationOutcome && result
+      ? getAccelerationTrackInsight(result.raiScore, result.revenueScore)
+      : null;
 
   return (
     <div className="presentation-slide space-y-4 lg:space-y-6">
@@ -857,8 +865,8 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
                <span className="block text-base lg:text-2xl font-black text-brand-blue leading-tight">
                  RAI {result.raiScore}% · الإيرادات {result.revenueScore}%
                </span>
-               <span className="block text-[10px] lg:text-xs font-bold text-slate-500 italic max-w-md">
-                 {result.trackTitle}
+               <span className="block text-[10px] lg:text-xs font-bold text-slate-600 italic max-w-md leading-snug">
+                 {getAccelerationTrackInsightShort(result.raiScore, result.revenueScore)}
                </span>
              </motion.div>
            ) : (
@@ -909,31 +917,80 @@ const SlidePhaseOne = ({ step }: { step: number }) => {
           </motion.div>
         )}
       </div>
-      <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
-        {CONTENT.slide5.tracks.map((track, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={step >= 2 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-            transition={{ delay: 0.35 + i * 0.1 }}
-            className={`p-4 lg:p-6 rounded-[1.5rem] lg:rounded-[2rem] bg-white border shadow-md group transition-all relative overflow-hidden flex flex-col hover:-translate-y-1 ${
-              recommendedTrackIndex === i
-                ? 'border-brand-orange ring-2 ring-brand-orange/30 shadow-xl shadow-brand-orange/10'
-                : 'border-slate-100 hover:border-brand-blue/40'
-            }`}
-          >
-             <div className={`absolute right-0 top-0 w-1 lg:w-1.5 h-full transition-all ${
-               recommendedTrackIndex === i ? 'bg-brand-orange' : 'bg-slate-100 group-hover:bg-brand-blue'
-             }`} />
-             {recommendedTrackIndex === i && (
-               <span className="absolute left-3 top-3 text-[9px] lg:text-[10px] font-black uppercase tracking-wider text-brand-orange bg-brand-orange/10 px-2 py-1 rounded-full">
-                 المسار المقترح
-               </span>
-             )}
-             <h4 className="text-base lg:text-lg font-black text-brand-blue mb-1 lg:mb-2 italic leading-tight">{track.name}</h4>
-             <p className="text-xs lg:text-sm text-slate-500 font-medium italic leading-relaxed">{track.desc}</p>
-          </motion.div>
-        ))}
+      <div
+        className={`lg:col-span-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4 items-stretch ${
+          isAccelerationOutcome ? 'relative' : ''
+        }`}
+      >
+        {isAccelerationOutcome && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[118%] w-[34%] -translate-x-1/2 -translate-y-1/2 rounded-[2.5rem] bg-brand-orange/15 blur-2xl lg:block"
+            aria-hidden
+          />
+        )}
+        {CONTENT.slide5.tracks.map((track, i) => {
+          const isRecommended = recommendedTrackIndex === i;
+          const isDimmed = isAccelerationOutcome && !isRecommended;
+
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={
+                step >= 2
+                  ? {
+                      opacity: isDimmed ? 0.28 : 1,
+                      scale: isRecommended ? 1.07 : isDimmed ? 0.86 : 1,
+                      filter: isDimmed ? 'grayscale(0.95)' : 'grayscale(0)',
+                    }
+                  : { opacity: 0, scale: 0.95 }
+              }
+              transition={{ delay: 0.35 + i * 0.1, duration: 0.45 }}
+              className={`relative flex flex-col overflow-hidden rounded-[1.5rem] border p-4 transition-all duration-500 lg:rounded-[2rem] lg:p-6 ${
+                isRecommended
+                  ? 'z-20 border-brand-orange bg-gradient-to-br from-white via-white to-emerald-50/80 shadow-2xl shadow-brand-orange/30 ring-4 ring-brand-orange/40 lg:-translate-y-2'
+                  : isDimmed
+                    ? 'border-slate-100/70 bg-slate-50/95 shadow-sm pointer-events-none saturate-50'
+                    : 'border-slate-100 bg-white shadow-md group hover:-translate-y-1 hover:border-brand-blue/40'
+              }`}
+            >
+              <div
+                aria-hidden
+                className={`absolute right-0 top-0 h-full ${
+                  isRecommended ? 'w-2 bg-brand-orange' : 'w-1 bg-slate-100 group-hover:bg-brand-blue lg:w-1.5'
+                }`}
+              />
+              {isRecommended && (
+                <>
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-orange/[0.08] to-transparent" />
+                  <span className="absolute left-3 top-3 z-10 rounded-full bg-brand-orange px-2.5 py-1 text-[9px] font-black uppercase tracking-wider text-white shadow-md lg:text-[10px]">
+                    المسار المقترح لكم
+                  </span>
+                </>
+              )}
+              <h4
+                className={`relative mb-2 leading-tight italic ${
+                  isRecommended
+                    ? 'mt-8 text-lg font-black text-brand-blue lg:mt-9 lg:text-xl'
+                    : 'text-base font-black text-brand-blue lg:text-lg'
+                }`}
+              >
+                {track.name}
+              </h4>
+              <p
+                className={`relative flex-grow leading-relaxed ${
+                  isRecommended
+                    ? 'text-sm font-bold text-slate-700 lg:text-base'
+                    : 'text-xs font-medium italic text-slate-500 lg:text-sm'
+                }`}
+              >
+                {isRecommended && accelerationInsight ? accelerationInsight : track.desc}
+              </p>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   </div>
